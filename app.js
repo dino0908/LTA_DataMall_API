@@ -12,9 +12,11 @@ const writeStream = fs.createWriteStream('output.txt');
 
 // Iterate through each object and write ServiceNo to the .txt file
 for (let obj of actualData) {
-    const code = obj.BusStopCode;
-    writeStream.write(`${code}\n`);
+    const serviceNo = obj.ServiceNo;
+    writeStream.write(`${serviceNo}\n`);
 }
 
 // Close the write stream
 writeStream.end();
+
+console.log('Service numbers have been written to output.txt');

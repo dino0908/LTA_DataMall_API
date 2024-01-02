@@ -15,13 +15,10 @@ import {
   Center,
 } from "@chakra-ui/react";
 import Select from "react-select";
+import AllBusServiceNumbers from "./data/AllBusServiceNumbers";
+import AllBusStopCodes from "./data/AllBusStopCodes";
 
 function Landing() {
-  const options = [
-    { value: "chocolate", label: "Chocolate" },
-    { value: "strawberry", label: "Strawberry" },
-    { value: "vanilla", label: "Vanilla" },
-  ];
 
   const [selectedOption, setSelectedOption] = useState(null);
   return (
@@ -105,7 +102,7 @@ function Landing() {
                             <Select
                               defaultValue={selectedOption}
                               onChange={setSelectedOption}
-                              options={options}
+                              options={AllBusStopCodes}
                               placeholder={"Select"}
                             />
                           </Box>
@@ -125,7 +122,7 @@ function Landing() {
                             <Select
                               defaultValue={selectedOption}
                               onChange={setSelectedOption}
-                              options={options}
+                              options={AllBusServiceNumbers}
                               placeholder={"Select"}
                             />
                           </Box>
