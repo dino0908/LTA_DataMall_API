@@ -25,20 +25,17 @@ function Landing() {
   const [busServiceNumber, setBusServiceNumber] = useState('')
 
   const handleETA = async () => {
-    // console.log(busServiceNumber.value, busStopNumber.value) 118A 01013
     try {
-      const url = 'http://127.0.0.1:8000/busETA/'
-      const result = await axios.post(url, {
-        BusStopCode: busStopNumber.value,
-      })
-      console.log(busStopNumber.value)
-      console.log(result)
+        const url = 'http://127.0.0.1:8000/busETA/';
+        const params = new URLSearchParams();
+        params.append('BusStopCode', busStopNumber.value);
+        const result = await axios.get(url, params);
+        console.log(result.data)
+    } catch (error) {
+        console.error(error);
     }
-    catch(error) {
-      console.log(error)
-    }
-    
-  }
+};
+
 
   return (
     <div>
