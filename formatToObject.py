@@ -1,6 +1,6 @@
 import json
 
-input_filename = 'busstopcodes.txt'  # Replace with your input file name
+input_filename = 'output.txt'  # Replace with your input file name
 output_filename = 'formatted_output.txt'  # Replace with your desired output file name
 
 formatted_options = []

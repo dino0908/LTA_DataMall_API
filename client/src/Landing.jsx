@@ -17,10 +17,29 @@ import {
 import Select from "react-select";
 import AllBusServiceNumbers from "./data/AllBusServiceNumbers";
 import AllBusStopCodes from "./data/AllBusStopCodes";
+import axios from 'axios'
 
 function Landing() {
 
-  const [selectedOption, setSelectedOption] = useState(null);
+  const [busStopNumber, setBusStopNumber] = useState('');
+  const [busServiceNumber, setBusServiceNumber] = useState('')
+
+  const handleETA = async () => {
+    // console.log(busServiceNumber.value, busStopNumber.value) 118A 01013
+    try {
+      const url = 'http://127.0.0.1:8000/busETA/'
+      const result = await axios.post(url, {
+        BusStopCode: busStopNumber.value,
+      })
+      console.log(busStopNumber.value)
+      console.log(result)
+    }
+    catch(error) {
+      console.log(error)
+    }
+    
+  }
+
   return (
     <div>
       <Flex align={"center"} height={"100vh"} bgColor={"grey"}>
@@ -77,12 +96,7 @@ function Landing() {
                       </Tab>
                     </TabList>
                     <TabPanels h={"94%"}>
-                      <TabPanel
-                        h={"90%"}
-                  
-                        borderRadius={"10px"}
-                        w={"100%"}
-                      >
+                      <TabPanel h={"90%"} borderRadius={"10px"} w={"100%"}>
                         <HStack
                           align={"start"}
                           spacing={20}
@@ -100,8 +114,7 @@ function Landing() {
                             </Text>
 
                             <Select
-                              defaultValue={selectedOption}
-                              onChange={setSelectedOption}
+                              onChange={setBusStopNumber}
                               options={AllBusStopCodes}
                               placeholder={"Select"}
                             />
@@ -120,15 +133,16 @@ function Landing() {
                             </Flex>
 
                             <Select
-                              defaultValue={selectedOption}
-                              onChange={setSelectedOption}
+  
+                              onChange={setBusServiceNumber}
                               options={AllBusServiceNumbers}
                               placeholder={"Select"}
+                            
                             />
                           </Box>
                         </HStack>
                         <Center>
-                          <Button w={"50%"} bgColor={"#ec6c1c"} color={"white"}>
+                          <Button w={"50%"} bgColor={"#ec6c1c"} color={"white"} onClick={handleETA}>
                             <Text fontSize={[10, 12, 18]}>
                               ESTIMATE ARRIVAL TIME
                             </Text>

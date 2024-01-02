@@ -7,5 +7,8 @@ def say_hello(request):
 def say_goodbye(request):
     return HttpResponse('Goodbye')
 
-def apistuff(request):
-    return HttpResponse('API Result')
+def busETA(request):
+    bus_stop_code = request.POST.get('BusStopCode')
+    print("Bus Stop Code:", bus_stop_code)
+
+    return HttpResponse('send help')
