@@ -27,14 +27,14 @@ function Landing() {
   const handleETA = async () => {
     try {
         const url = 'http://127.0.0.1:8000/busETA/';
-        const params = new URLSearchParams();
-        params.append('BusStopCode', busStopNumber.value);
-        const result = await axios.get(url, params);
-        console.log(result.data)
+        const result = await axios.post(url, { BusStopCode: busStopNumber.value });
+        console.log(result.data);
+        console.log(busStopNumber.value);
     } catch (error) {
         console.error(error);
     }
 };
+
 
 
   return (
