@@ -1,5 +1,5 @@
 const AllBusServiceNumbers = [
-  { value: "0", label: "Select Option" },
+  { value: '', label: "Select Option" },
   { value: "118", label: "118" },
   { value: "118A", label: "118A" },
   { value: "118B", label: "118B" },

@@ -1,5 +1,5 @@
 const AllBusStopCodes = [
-    { value: '0', label: 'Select Option'},
+    { value: '', label: 'Select Option'},
     { value: "01012", label: "01012" },
     { value: "01013", label: "01013" },
     { value: "01019", label: "01019" },

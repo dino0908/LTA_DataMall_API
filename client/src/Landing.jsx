@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import {
   Tabs,
   TabList,
@@ -17,25 +17,58 @@ import {
 import Select from "react-select";
 import AllBusServiceNumbers from "./data/AllBusServiceNumbers";
 import AllBusStopCodes from "./data/AllBusStopCodes";
-import axios from 'axios'
+import axios from "axios";
 
 function Landing() {
-
-  const [busStopNumber, setBusStopNumber] = useState('');
-  const [busServiceNumber, setBusServiceNumber] = useState('')
+  const [busStopNumber, setBusStopNumber] = useState("");
+  const [busServiceNumber, setBusServiceNumber] = useState("");
+  const [busServicesToDisplay, setBusServicesToDisplay] =
+    useState(AllBusServiceNumbers);
 
   const handleETA = async () => {
     try {
-        const url = 'http://127.0.0.1:8000/busETA/';
-        const result = await axios.post(url, { BusStopCode: busStopNumber.value });
-        console.log(result.data);
-        console.log(busStopNumber.value);
+      const url = "http://127.0.0.1:8000/busETA/";
+      const result = await axios.post(url, {
+        BusStopCode: busStopNumber.value,
+        ServiceNo: busServiceNumber.value,
+      });
+      const data = result.data.Services;
+      // console.log(data);
     } catch (error) {
-        console.error(error);
+      console.error(error);
     }
-};
+  };
 
+  //if busStopNumber is not '', use it to retrieve bus services at that bus stop, and those bus services should replace AllBusServicesNumber
+  useEffect(() => {
+    const getBusServicesFromBusStopNumber = async () => {
+      try {
+        const url = "http://127.0.0.1:8000/getBusServices/";
+        const result = await axios.post(url, {
+          BusStopCode: busStopNumber.value,
+        });
+        const data = result.data.Services;
+        const busServices = [];
+        for (let bus of data) {
+          busServices.push(bus.ServiceNo);
+        }
+        console.log(busServices);
+        const formattedBusServices = [
+          { value: "", label: "Select Option" },
+          ...busServices.map((serviceNo) => ({
+            value: serviceNo,
+            label: serviceNo,
+          })),
+        ];
 
+        console.log(formattedBusServices);
+        setBusServicesToDisplay(formattedBusServices);
+      } catch (error) {
+        console.log(error);
+      }
+    };
+    getBusServicesFromBusStopNumber();
+  }, [busStopNumber]);
 
   return (
     <div>
@@ -130,16 +163,19 @@ function Landing() {
                             </Flex>
 
                             <Select
-  
                               onChange={setBusServiceNumber}
-                              options={AllBusServiceNumbers}
+                              options={busServicesToDisplay}
                               placeholder={"Select"}
-                            
                             />
                           </Box>
                         </HStack>
                         <Center>
-                          <Button w={"50%"} bgColor={"#ec6c1c"} color={"white"} onClick={handleETA}>
+                          <Button
+                            w={"50%"}
+                            bgColor={"#ec6c1c"}
+                            color={"white"}
+                            onClick={handleETA}
+                          >
                             <Text fontSize={[10, 12, 18]}>
                               ESTIMATE ARRIVAL TIME
                             </Text>
