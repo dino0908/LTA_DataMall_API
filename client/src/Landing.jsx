@@ -218,21 +218,20 @@ function Landing() {
                               {displayData.length > 0 && (
                                 <Thead>
                                   <Tr>
-                                    <Th>Bus Service</Th>
-                                    <Th>ETA</Th>
-                                    <Th>Crowd Level</Th>
-                                    <Th>Type</Th>
-
-                                    <Th>Wheel-chair Friendly</Th>
-                                    <Th>Subsequent Bus ETA</Th>
+                                    <Th textAlign={'center'}>Bus Service</Th>
+                                    <Th textAlign={'center'}>ETA</Th>
+                                    <Th textAlign={'center'}>Crowd Level</Th>
+                                    <Th textAlign={'center'}>Type</Th>
+                                    <Th textAlign={'center'}>Wheel-chair Friendly</Th>
+                                    <Th textAlign={'center'}>Subsequent Bus ETA</Th>
                                   </Tr>
                                 </Thead>
                               )}
                               <Tbody>
                                 {displayData.map((obj, index) => (
                                   <Tr key={index}>
-                                    <Td><Heading>{obj.ServiceNo}</Heading></Td>
-                                    <Td>
+                                    <Td textAlign={'center'}><Heading>{obj.ServiceNo}</Heading></Td>
+                                    <Td textAlign={'center'}>
                                       {calculateETA(
                                         obj.NextBus.EstimatedArrival
                                       )}
@@ -249,6 +248,7 @@ function Landing() {
                                             ? "red"
                                             : "",
                                       }}
+                                      textAlign={'center'}
                                     >
                                       {obj.NextBus.Load === "SEA"
                                         ? "Seats Available"
@@ -258,7 +258,7 @@ function Landing() {
                                         ? "Limited Standing"
                                         : ""}
                                     </Td>
-                                    <Td>
+                                    <Td textAlign={'center'}>
                                       {obj.NextBus.Type === "DD"
                                         ? "Double Decker"
                                         : obj.NextBus.Type === "SD"
@@ -268,12 +268,12 @@ function Landing() {
                                         : ""}
                                     </Td>
 
-                                    <Td>
+                                    <Td textAlign={'center'}>
                                       {obj.NextBus.Feature === "WAB"
                                         ? "Yes"
                                         : "No"}
                                     </Td>
-                                    <Td>
+                                    <Td textAlign={'center'}>
                                       {calculateETA(
                                         obj.NextBus2.EstimatedArrival
                                       )}
