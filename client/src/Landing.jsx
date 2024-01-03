@@ -89,9 +89,11 @@ function Landing() {
     const estimatedArrivalDateTime = new Date(estimatedArrival);
     const timeDifferenceMs = estimatedArrivalDateTime - currentDateTime;
     const timeDifferenceMinutes = Math.ceil(timeDifferenceMs / (1000 * 60));
-    return timeDifferenceMinutes <= 1 ? 'Arriving' : `${timeDifferenceMinutes} min`;
+    return timeDifferenceMinutes <= 1
+      ? "Arriving"
+      : `${timeDifferenceMinutes} min`;
   };
-  
+
   return (
     <div>
       <Flex align={"center"} height={"100vh"} bgColor={"grey"}>
@@ -196,9 +198,10 @@ function Landing() {
                         <Center>
                           <Button
                             w={"50%"}
-                            bgColor={"#ec6c1c"}
+                            bgColor={"#4e76e6"}
                             color={"white"}
                             onClick={handleETA}
+                            _hover={{ bgColor: "#294db3", color: "white" }}
                           >
                             <Text fontSize={[10, 12, 18]}>
                               ESTIMATE ARRIVAL TIME
@@ -206,7 +209,7 @@ function Landing() {
                           </Button>
                         </Center>
 
-                        <Box w={"100%"} h={"100%"}>
+                        <Box w={"100%"} h={"100%"} marginTop={"20px"}>
                           <TableContainer>
                             <Table variant="striped" colorScheme="cyan">
                               <TableCaption>
@@ -215,18 +218,45 @@ function Landing() {
                               {displayData.length > 0 && (
                                 <Thead>
                                   <Tr>
-                                    <Th w={"10%"}>Bus Service</Th>
-                                    <Th w={"30%"}>ETA</Th>
+                                    <Th>Bus Service</Th>
+                                    <Th>ETA</Th>
+                                    <Th>Crowd Level</Th>
                                     <Th>Type</Th>
+
+                                    <Th>Wheel-chair Friendly</Th>
+                                    <Th>Subsequent Bus ETA</Th>
                                   </Tr>
                                 </Thead>
                               )}
                               <Tbody>
                                 {displayData.map((obj, index) => (
                                   <Tr key={index}>
-                                    <Td>{obj.ServiceNo}</Td>
+                                    <Td><Heading>{obj.ServiceNo}</Heading></Td>
                                     <Td>
-                                    {calculateETA(obj.NextBus.EstimatedArrival)}
+                                      {calculateETA(
+                                        obj.NextBus.EstimatedArrival
+                                      )}
+                                    </Td>
+
+                                    <Td
+                                      style={{
+                                        color:
+                                          obj.NextBus.Load === "SEA"
+                                            ? "#05803a"
+                                            : obj.NextBus.Load === "SDA"
+                                            ? "orange"
+                                            : obj.NextBus.Load === "LSD"
+                                            ? "red"
+                                            : "",
+                                      }}
+                                    >
+                                      {obj.NextBus.Load === "SEA"
+                                        ? "Seats Available"
+                                        : obj.NextBus.Load === "SDA"
+                                        ? "Standing Available"
+                                        : obj.NextBus.Load === "LSD"
+                                        ? "Limited Standing"
+                                        : ""}
                                     </Td>
                                     <Td>
                                       {obj.NextBus.Type === "DD"
@@ -236,6 +266,17 @@ function Landing() {
                                         : obj.NextBus.Type === "BD"
                                         ? "Bendy"
                                         : ""}
+                                    </Td>
+
+                                    <Td>
+                                      {obj.NextBus.Feature === "WAB"
+                                        ? "Yes"
+                                        : "No"}
+                                    </Td>
+                                    <Td>
+                                      {calculateETA(
+                                        obj.NextBus2.EstimatedArrival
+                                      )}
                                     </Td>
                                   </Tr>
                                 ))}
