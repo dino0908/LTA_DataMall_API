@@ -13,6 +13,16 @@ import {
   HStack,
   Button,
   Center,
+  Card,
+  Table,
+  Thead,
+  Tbody,
+  Tfoot,
+  Tr,
+  Th,
+  Td,
+  TableCaption,
+  TableContainer,
 } from "@chakra-ui/react";
 import Select from "react-select";
 import AllBusServiceNumbers from "./data/AllBusServiceNumbers";
@@ -24,6 +34,7 @@ function Landing() {
   const [busServiceNumber, setBusServiceNumber] = useState("");
   const [busServicesToDisplay, setBusServicesToDisplay] =
     useState(AllBusServiceNumbers);
+  const [displayData, setDisplayData] = useState([]);
 
   const handleETA = async () => {
     try {
@@ -34,6 +45,7 @@ function Landing() {
       });
       const data = result.data.Services;
       // console.log(data);
+      setDisplayData(data);
     } catch (error) {
       console.error(error);
     }
@@ -41,7 +53,8 @@ function Landing() {
 
   //if busStopNumber is not '', use it to retrieve bus services at that bus stop, and those bus services should replace AllBusServicesNumber
   useEffect(() => {
-    if (busStopNumber.value != '') {
+    if (busStopNumber.value != "") {
+      setBusServiceNumber("");
       const getBusServicesFromBusStopNumber = async () => {
         try {
           const url = "http://127.0.0.1:8000/busETA/";
@@ -66,11 +79,19 @@ function Landing() {
       };
       getBusServicesFromBusStopNumber();
     } else {
-      setBusServicesToDisplay(AllBusServiceNumbers)
+      setBusServiceNumber("");
+      setBusServicesToDisplay(AllBusServiceNumbers);
     }
-    
   }, [busStopNumber]);
 
+  const calculateETA = (estimatedArrival) => {
+    const currentDateTime = new Date();
+    const estimatedArrivalDateTime = new Date(estimatedArrival);
+    const timeDifferenceMs = estimatedArrivalDateTime - currentDateTime;
+    const timeDifferenceMinutes = Math.ceil(timeDifferenceMs / (1000 * 60));
+    return timeDifferenceMinutes <= 1 ? 'Arriving' : `${timeDifferenceMinutes} min`;
+  };
+  
   return (
     <div>
       <Flex align={"center"} height={"100vh"} bgColor={"grey"}>
@@ -79,7 +100,7 @@ function Landing() {
           h={"100%"}
           margin={"auto"}
           bgColor={"white"}
-          overflow={"hidden"}
+          overflow={"auto"}
         >
           <Tabs h={"100%"}>
             <TabList mb="1em" h={"6%"}>
@@ -145,6 +166,7 @@ function Landing() {
                             </Text>
 
                             <Select
+                              value={busStopNumber}
                               onChange={setBusStopNumber}
                               options={AllBusStopCodes}
                               placeholder={"Select"}
@@ -164,6 +186,7 @@ function Landing() {
                             </Flex>
 
                             <Select
+                              value={busServiceNumber}
                               onChange={setBusServiceNumber}
                               options={busServicesToDisplay}
                               placeholder={"Select"}
@@ -182,6 +205,44 @@ function Landing() {
                             </Text>
                           </Button>
                         </Center>
+
+                        <Box w={"100%"} h={"100%"}>
+                          <TableContainer>
+                            <Table variant="striped" colorScheme="cyan">
+                              <TableCaption>
+                                Data provided by LTA Singapore
+                              </TableCaption>
+                              {displayData.length > 0 && (
+                                <Thead>
+                                  <Tr>
+                                    <Th w={"10%"}>Bus Service</Th>
+                                    <Th w={"30%"}>ETA</Th>
+                                    <Th>Type</Th>
+                                  </Tr>
+                                </Thead>
+                              )}
+                              <Tbody>
+                                {displayData.map((obj, index) => (
+                                  <Tr key={index}>
+                                    <Td>{obj.ServiceNo}</Td>
+                                    <Td>
+                                    {calculateETA(obj.NextBus.EstimatedArrival)}
+                                    </Td>
+                                    <Td>
+                                      {obj.NextBus.Type === "DD"
+                                        ? "Double Decker"
+                                        : obj.NextBus.Type === "SD"
+                                        ? "Single Decker"
+                                        : obj.NextBus.Type === "BD"
+                                        ? "Bendy"
+                                        : ""}
+                                    </Td>
+                                  </Tr>
+                                ))}
+                              </Tbody>
+                            </Table>
+                          </TableContainer>
+                        </Box>
                       </TabPanel>
                       <TabPanel h={"90%"}>
                         <p>two!</p>

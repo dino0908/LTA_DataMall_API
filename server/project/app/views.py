@@ -7,16 +7,21 @@ from django.views.decorators.http import require_POST
 @csrf_exempt
 @require_POST
 def busETA(request):
+    api_url = 'http://datamall2.mytransport.sg/ltaodataservice/BusArrivalv2'
     data = json.loads(request.body.decode('utf-8'))
     bus_stop_code = data.get('BusStopCode')
-    api_url = 'http://datamall2.mytransport.sg/ltaodataservice/BusArrivalv2'
-    params = {'BusStopCode': bus_stop_code}
+    bus_service_code = data.get('ServiceNo') #bus_service_code can either be the bus service or ''
+    if (bus_service_code != ''):
+        params = {'BusStopCode': bus_stop_code, 'ServiceNo': bus_service_code}
+    else:
+        params = {'BusStopCode': bus_stop_code}
+    
     headers = {'AccountKey': 'sI9JhoYoRbqzNvshYOHVXQ=='}
 
     try:
         response = requests.get(api_url, params=params, headers=headers)
         # Process the response data as needed
-        print("API Response:", response.content)
+        # print("API Response:", response.content)
     except requests.RequestException as e:
         print("Error making API request:", e)
 
