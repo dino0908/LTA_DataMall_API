@@ -41,33 +41,34 @@ function Landing() {
 
   //if busStopNumber is not '', use it to retrieve bus services at that bus stop, and those bus services should replace AllBusServicesNumber
   useEffect(() => {
-    const getBusServicesFromBusStopNumber = async () => {
-      try {
-        const url = "http://127.0.0.1:8000/getBusServices/";
-        const result = await axios.post(url, {
-          BusStopCode: busStopNumber.value,
-        });
-        const data = result.data.Services;
-        const busServices = [];
-        for (let bus of data) {
-          busServices.push(bus.ServiceNo);
+    if (busStopNumber.value != '') {
+      const getBusServicesFromBusStopNumber = async () => {
+        try {
+          const url = "http://127.0.0.1:8000/busETA/";
+          const result = await axios.post(url, {
+            BusStopCode: busStopNumber.value,
+          });
+          const data = result.data.Services;
+          if (Array.isArray(data)) {
+            const busServices = data.map((bus) => bus.ServiceNo);
+            const formattedBusServices = [
+              { value: "", label: "Select Option" },
+              ...busServices.map((serviceNo) => ({
+                value: serviceNo,
+                label: serviceNo,
+              })),
+            ];
+            setBusServicesToDisplay(formattedBusServices);
+          }
+        } catch (error) {
+          console.log(error);
         }
-        console.log(busServices);
-        const formattedBusServices = [
-          { value: "", label: "Select Option" },
-          ...busServices.map((serviceNo) => ({
-            value: serviceNo,
-            label: serviceNo,
-          })),
-        ];
-
-        console.log(formattedBusServices);
-        setBusServicesToDisplay(formattedBusServices);
-      } catch (error) {
-        console.log(error);
-      }
-    };
-    getBusServicesFromBusStopNumber();
+      };
+      getBusServicesFromBusStopNumber();
+    } else {
+      setBusServicesToDisplay(AllBusServiceNumbers)
+    }
+    
   }, [busStopNumber]);
 
   return (
