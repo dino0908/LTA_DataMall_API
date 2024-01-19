@@ -37,17 +37,26 @@ function Landing() {
   const [busServicesToDisplay, setBusServicesToDisplay] =
     useState(AllBusServiceNumbers);
   const [displayData, setDisplayData] = useState([]);
+  const [displaySearchErrorMessage, setDisplaySearchErrorMessage] =
+    useState(false);
 
   const handleETA = async () => {
     try {
       const url = "http://127.0.0.1:8000/busETA/";
-      const result = await axios.post(url, {
-        BusStopCode: busStopNumber.value,
-        ServiceNo: busServiceNumber.value,
-      });
-      const data = result.data.Services;
-      // console.log(data);
-      setDisplayData(data);
+      const busStopCode = busStopNumber.value;
+      const serviceNo = busServiceNumber.value;
+      if (busStopCode != "") {
+        const result = await axios.post(url, {
+          BusStopCode: busStopCode,
+          ServiceNo: serviceNo,
+        });
+        const data = result.data.Services;
+        // console.log(data);
+        setDisplayData(data);
+        setDisplaySearchErrorMessage(false);
+      } else {
+        setDisplaySearchErrorMessage(true);
+      }
     } catch (error) {
       console.error(error);
     }
@@ -92,7 +101,7 @@ function Landing() {
     const timeDifferenceMs = estimatedArrivalDateTime - currentDateTime;
     const timeDifferenceMinutes = Math.ceil(timeDifferenceMs / (1000 * 60));
     if (isNaN(timeDifferenceMinutes)) {
-      return 'No Data'
+      return "No Data";
     }
     return timeDifferenceMinutes <= 1
       ? "Arriving"
@@ -213,6 +222,11 @@ function Landing() {
                             </Text>
                           </Button>
                         </Center>
+                        {displaySearchErrorMessage && (
+                          <Center marginTop={"10px"}>
+                            <Text color={"red"}>Please select an option</Text>
+                          </Center>
+                        )}
 
                         <Box w={"100%"} h={"100%"} marginTop={"20px"}>
                           <TableContainer>
@@ -341,7 +355,7 @@ function Landing() {
                                   </Tr>
                                   <Tr>
                                     <Th textAlign={"left"}>
-                                      Subsequent Bus ETA
+                                      Sub Bus ETA
                                     </Th>
                                     <Td textAlign={"left"}>
                                       {calculateETA(
