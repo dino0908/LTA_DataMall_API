@@ -212,13 +212,14 @@ function Landing() {
                         <Center>
                           <Button
                             w={"50%"}
+                            maxW={'150px'}
                             bgColor={"#4e76e6"}
                             color={"white"}
                             onClick={handleETA}
                             _hover={{ bgColor: "#294db3", color: "white" }}
                           >
-                            <Text fontSize={[10, 12, 18]}>
-                              ESTIMATE ARRIVAL TIME
+                            <Text fontSize={[10, 12, 18]} >
+                              Estimate
                             </Text>
                           </Button>
                         </Center>
