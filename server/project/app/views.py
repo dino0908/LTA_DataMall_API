@@ -46,6 +46,10 @@ def carpark(request):
         content = json.loads(response.content)
         filtered_data_by_area = []
         filtered_data_by_area_and_search = []
+        
+        if area == '':
+            filtered_data_by_area = content.get('value', [])
+
         if area != '':
             for i in range(0, len(content.get('value', []))):
                 each_index_data = content.get('value', [])[i]
@@ -53,7 +57,6 @@ def carpark(request):
                     filtered_data_by_area.append(each_index_data)
         
         if search != '':
-            development_list = []
             for i in range(len(filtered_data_by_area)):
                 each_index_data = filtered_data_by_area[i]
                 if search.lower() in each_index_data['Development'].lower():

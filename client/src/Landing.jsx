@@ -38,8 +38,6 @@ function Landing() {
   const [busServicesToDisplay, setBusServicesToDisplay] =
     useState(AllBusServiceNumbers);
   const [displayData, setDisplayData] = useState([]);
-  const [displaySearchErrorMessage, setDisplaySearchErrorMessage] =
-    useState(false);
   const [displayCarparkData, setDisplayCarparkData] = useState([]);
 
   //every time there is change in area or search, call api to update displaycarparkdata
@@ -78,14 +76,17 @@ function Landing() {
         const data = result.data.Services;
         // console.log(data);
         setDisplayData(data);
-        setDisplaySearchErrorMessage(false);
-      } else {
-        setDisplaySearchErrorMessage(true);
+      } else { //busStopCode is empty, user chose 'select option'
+        setDisplayData([])
       }
     } catch (error) {
       console.error(error);
     }
   };
+
+  useEffect(() => {
+    handleETA()
+  }, [busStopNumber, busServiceNumber])
 
   //if busStopNumber is not '', use it to retrieve bus services at that bus stop, and those bus services should replace AllBusServicesNumber
   useEffect(() => {
@@ -236,7 +237,7 @@ function Landing() {
                             />
                           </Box>
                         </HStack>
-                        <Center>
+                        {/* <Center>
                           <Button
                             w={"50%"}
                             maxW={"150px"}
@@ -247,12 +248,7 @@ function Landing() {
                           >
                             <Text fontSize={[10, 12, 18]}>Estimate</Text>
                           </Button>
-                        </Center>
-                        {displaySearchErrorMessage && (
-                          <Center marginTop={"10px"}>
-                            <Text color={"red"}>Please select an option</Text>
-                          </Center>
-                        )}
+                        </Center> */}
 
                         <Box w={"100%"} h={"100%"} marginTop={"20px"}>
                           <TableContainer>
@@ -261,7 +257,7 @@ function Landing() {
                                 <TableCaption>
                                   Data provided by LTA Singapore
                                 </TableCaption>
-                                {displayData.length > 0 && (
+                                {displayData && displayData.length > 0 && (
                                   <Thead>
                                     <Tr>
                                       <Th textAlign={"center"}>Bus Service</Th>
@@ -275,7 +271,7 @@ function Landing() {
                                   </Thead>
                                 )}
                                 <Tbody>
-                                  {displayData.map((obj, index) => (
+                                  {displayData && displayData.map((obj, index) => (
                                     <Tr key={index}>
                                       <Td textAlign={"center"}>
                                         <Heading>{obj.ServiceNo}</Heading>
@@ -327,7 +323,7 @@ function Landing() {
                               </Table>
                             </Show>
                             <Show below="1300px">
-                              {displayData.map((obj, index) => (
+                              {displayData && displayData.map((obj, index) => (
                                 <Table key={index}>
                                   <Tr>
                                     <Th textAlign={"left"}>Bus Service</Th>
