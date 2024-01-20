@@ -153,7 +153,7 @@ function Landing() {
               <Tab>
                 <Text fontSize={[12, 15, 20]}>Carpark Availability</Text>
               </Tab>
-              <Tab>
+              <Tab isDisabled>
                 <Text fontSize={[12, 15, 20]}>Live Traffic</Text>
               </Tab>
             </TabList>
@@ -164,7 +164,7 @@ function Landing() {
                     NextBus Arrival Timings
                   </Heading>
                   <Text fontSize={[12, 13, 18]} marginTop={"10px"}>
-                    Find out the estimated arrival time of your next bus!
+                    Find out the estimated arrival time of your next bus
                   </Text>
                 </Box>
                 <Box h={"90%"} marginTop={"20px"}>
@@ -409,7 +409,7 @@ function Landing() {
                     Carpark Availability
                   </Heading>
                   <Text fontSize={[12, 13, 18]} marginTop={"10px"}>
-                    Check for available lots at various carparks!
+                    Check for available lots at various carparks
                   </Text>
                 </Box>
                 <Box h={"90%"} marginTop={"20px"}>
@@ -557,7 +557,14 @@ function Landing() {
               </TabPanel>
 
               <TabPanel>
-                <p>three!</p>
+              <Box h={"10%"} textAlign={"center"}>
+                  <Heading fontSize={[20, 28, 40]} color={"#8C1B55"}>
+                    Live Traffic Images
+                  </Heading>
+                  <Text fontSize={[12, 13, 18]} marginTop={"10px"}>
+                    View live traffic images at various locations in Singapore
+                  </Text>
+                </Box>
               </TabPanel>
             </TabPanels>
           </Tabs>
