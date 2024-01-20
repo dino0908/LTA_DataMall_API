@@ -76,8 +76,9 @@ function Landing() {
         const data = result.data.Services;
         // console.log(data);
         setDisplayData(data);
-      } else { //busStopCode is empty, user chose 'select option'
-        setDisplayData([])
+      } else {
+        //busStopCode is empty, user chose 'select option'
+        setDisplayData([]);
       }
     } catch (error) {
       console.error(error);
@@ -85,8 +86,8 @@ function Landing() {
   };
 
   useEffect(() => {
-    handleETA()
-  }, [busStopNumber, busServiceNumber])
+    handleETA();
+  }, [busStopNumber, busServiceNumber]);
 
   //if busStopNumber is not '', use it to retrieve bus services at that bus stop, and those bus services should replace AllBusServicesNumber
   useEffect(() => {
@@ -271,17 +272,78 @@ function Landing() {
                                   </Thead>
                                 )}
                                 <Tbody>
-                                  {displayData && displayData.map((obj, index) => (
-                                    <Tr key={index}>
-                                      <Td textAlign={"center"}>
+                                  {displayData &&
+                                    displayData.map((obj, index) => (
+                                      <Tr key={index}>
+                                        <Td textAlign={"center"}>
+                                          <Heading>{obj.ServiceNo}</Heading>
+                                        </Td>
+                                        <Td textAlign={"center"}>
+                                          {calculateETA(
+                                            obj.NextBus.EstimatedArrival
+                                          )}
+                                        </Td>
+
+                                        <Td
+                                          style={{
+                                            color:
+                                              obj.NextBus.Load === "SEA"
+                                                ? "#05803a"
+                                                : obj.NextBus.Load === "SDA"
+                                                ? "orange"
+                                                : obj.NextBus.Load === "LSD"
+                                                ? "red"
+                                                : "",
+                                          }}
+                                          textAlign={"center"}
+                                        >
+                                          {obj.NextBus.Load === "SEA"
+                                            ? "Seats Available"
+                                            : obj.NextBus.Load === "SDA"
+                                            ? "Standing Available"
+                                            : obj.NextBus.Load === "LSD"
+                                            ? "Limited Standing"
+                                            : ""}
+                                        </Td>
+                                        <Td textAlign={"center"}>
+                                          {obj.NextBus.Type === "DD"
+                                            ? "Double Decker"
+                                            : obj.NextBus.Type === "SD"
+                                            ? "Single Decker"
+                                            : obj.NextBus.Type === "BD"
+                                            ? "Bendy"
+                                            : ""}
+                                        </Td>
+                                        <Td textAlign={"center"}>
+                                          {calculateETA(
+                                            obj.NextBus2.EstimatedArrival
+                                          )}
+                                        </Td>
+                                      </Tr>
+                                    ))}
+                                </Tbody>
+                              </Table>
+                            </Show>
+                            <Show below="1300px">
+                              {displayData &&
+                                displayData.map((obj, index) => (
+                                  <Table key={index}>
+                                    <Tr>
+                                      <Th textAlign={"left"}>Bus Service</Th>
+                                      <Td textAlign={"left"}>
                                         <Heading>{obj.ServiceNo}</Heading>
                                       </Td>
-                                      <Td textAlign={"center"}>
+                                    </Tr>
+                                    <Tr>
+                                      <Th textAlign={"left"}>ETA</Th>
+                                      <Td textAlign={"left"}>
                                         {calculateETA(
                                           obj.NextBus.EstimatedArrival
                                         )}
                                       </Td>
-
+                                    </Tr>
+                                    <Tr>
+                                      <Th textAlign={"left"}>Crowd Level</Th>
                                       <Td
                                         style={{
                                           color:
@@ -293,7 +355,7 @@ function Landing() {
                                               ? "red"
                                               : "",
                                         }}
-                                        textAlign={"center"}
+                                        textAlign={"left"}
                                       >
                                         {obj.NextBus.Load === "SEA"
                                           ? "Seats Available"
@@ -303,7 +365,10 @@ function Landing() {
                                           ? "Limited Standing"
                                           : ""}
                                       </Td>
-                                      <Td textAlign={"center"}>
+                                    </Tr>
+                                    <Tr>
+                                      <Th textAlign={"left"}>Type</Th>
+                                      <Td textAlign={"left"}>
                                         {obj.NextBus.Type === "DD"
                                           ? "Double Decker"
                                           : obj.NextBus.Type === "SD"
@@ -312,82 +377,20 @@ function Landing() {
                                           ? "Bendy"
                                           : ""}
                                       </Td>
-                                      <Td textAlign={"center"}>
+                                    </Tr>
+                                    <Tr>
+                                      <Th textAlign={"left"}>Sub Bus ETA</Th>
+                                      <Td textAlign={"left"}>
                                         {calculateETA(
                                           obj.NextBus2.EstimatedArrival
                                         )}
                                       </Td>
                                     </Tr>
-                                  ))}
-                                </Tbody>
-                              </Table>
-                            </Show>
-                            <Show below="1300px">
-                              {displayData && displayData.map((obj, index) => (
-                                <Table key={index}>
-                                  <Tr>
-                                    <Th textAlign={"left"}>Bus Service</Th>
-                                    <Td textAlign={"left"}>
-                                      <Heading>{obj.ServiceNo}</Heading>
-                                    </Td>
-                                  </Tr>
-                                  <Tr>
-                                    <Th textAlign={"left"}>ETA</Th>
-                                    <Td textAlign={"left"}>
-                                      {calculateETA(
-                                        obj.NextBus.EstimatedArrival
-                                      )}
-                                    </Td>
-                                  </Tr>
-                                  <Tr>
-                                    <Th textAlign={"left"}>Crowd Level</Th>
-                                    <Td
-                                      style={{
-                                        color:
-                                          obj.NextBus.Load === "SEA"
-                                            ? "#05803a"
-                                            : obj.NextBus.Load === "SDA"
-                                            ? "orange"
-                                            : obj.NextBus.Load === "LSD"
-                                            ? "red"
-                                            : "",
-                                      }}
-                                      textAlign={"left"}
-                                    >
-                                      {obj.NextBus.Load === "SEA"
-                                        ? "Seats Available"
-                                        : obj.NextBus.Load === "SDA"
-                                        ? "Standing Available"
-                                        : obj.NextBus.Load === "LSD"
-                                        ? "Limited Standing"
-                                        : ""}
-                                    </Td>
-                                  </Tr>
-                                  <Tr>
-                                    <Th textAlign={"left"}>Type</Th>
-                                    <Td textAlign={"left"}>
-                                      {obj.NextBus.Type === "DD"
-                                        ? "Double Decker"
-                                        : obj.NextBus.Type === "SD"
-                                        ? "Single Decker"
-                                        : obj.NextBus.Type === "BD"
-                                        ? "Bendy"
-                                        : ""}
-                                    </Td>
-                                  </Tr>
-                                  <Tr>
-                                    <Th textAlign={"left"}>Sub Bus ETA</Th>
-                                    <Td textAlign={"left"}>
-                                      {calculateETA(
-                                        obj.NextBus2.EstimatedArrival
-                                      )}
-                                    </Td>
-                                  </Tr>
-                                  <Tr>
-                                    <Td></Td>
-                                  </Tr>
-                                </Table>
-                              ))}
+                                    <Tr>
+                                      <Td></Td>
+                                    </Tr>
+                                  </Table>
+                                ))}
                             </Show>
                           </TableContainer>
                         </Box>
@@ -521,30 +524,26 @@ function Landing() {
                               </Table>
                             </Show>
                             <Show below="1300px">
-                              {displayCarparkData && displayCarparkData.map((obj, index) => (
-                                <Table key={index}>
-                                  <Tr>
-                                    <Th textAlign={"left"}>Bus Service</Th>
-                                    <Td textAlign={"left"}>x</Td>
-                                  </Tr>
-                                  <Tr>
-                                    <Th textAlign={"left"}>ETA</Th>
-                                    <Td textAlign={"left"}>x</Td>
-                                  </Tr>
-                                  <Tr>
-                                    <Th textAlign={"left"}>Crowd Level</Th>
-                                  </Tr>
-                                  <Tr>
-                                    <Th textAlign={"left"}>Type</Th>
-                                  </Tr>
-                                  <Tr>
-                                    <Th textAlign={"left"}>Sub Bus ETA</Th>
-                                  </Tr>
-                                  <Tr>
-                                    <Td></Td>
-                                  </Tr>
-                                </Table>
-                              ))}
+                              {displayCarparkData &&
+                                displayCarparkData.map((obj, index) => (
+                                  <Table key={index}>
+                                    <Tr>
+                                      <Tr>
+                                        <Td textAlign={"left"}>
+                                          {obj.Development}
+                                        </Td>
+                                      </Tr>
+                                      <Tr>
+                                        <Td textAlign={"left"}>
+                                          {obj.AvailableLots}
+                                        </Td>
+                                      </Tr>
+                                      <Tr>
+                                        <Td></Td>
+                                      </Tr>
+                                    </Tr>
+                                  </Table>
+                                ))}
                             </Show>
                           </TableContainer>
                         </Box>
