@@ -1,4 +1,4 @@
-import React, { useState, useEffect, Fragment } from "react";
+import React, { useState, useEffect } from "react";
 import {
   Tabs,
   TabList,
@@ -9,29 +9,30 @@ import {
   Flex,
   Heading,
   Text,
-  Input,
   HStack,
   Button,
   Center,
-  Card,
   Table,
   Thead,
   Tbody,
-  Tfoot,
   Tr,
   Th,
   Td,
   TableCaption,
   TableContainer,
   Show,
-  Hide,
+  Input,
 } from "@chakra-ui/react";
 import Select from "react-select";
 import AllBusServiceNumbers from "./data/AllBusServiceNumbers";
 import AllBusStopCodes from "./data/AllBusStopCodes";
+import AllAreas from "./data/AllAreas";
+import AllCarParks from "./data/AllCarParks";
 import axios from "axios";
 
 function Landing() {
+  const [area, setArea] = useState("");
+  const [carParkSearch, setCarParkSearch] = useState("");
   const [busStopNumber, setBusStopNumber] = useState("");
   const [busServiceNumber, setBusServiceNumber] = useState("");
   const [busServicesToDisplay, setBusServicesToDisplay] =
@@ -39,6 +40,30 @@ function Landing() {
   const [displayData, setDisplayData] = useState([]);
   const [displaySearchErrorMessage, setDisplaySearchErrorMessage] =
     useState(false);
+  const [displayCarparkData, setDisplayCarparkData] = useState([]);
+
+  //every time there is change in area or search, call api to update displaycarparkdata
+  useEffect(() => {
+    const updateCarParks = async () => {
+      try {
+        const url = "http://127.0.0.1:8000/carpark/";
+        const areaSelected = area.value;
+        const search = carParkSearch;
+        if (areaSelected || search || areaSelected == "") {
+          const result = await axios.post(url, {
+            area: areaSelected,
+            search: search,
+          });
+          setDisplayCarparkData(result.data);
+          console.log(result.data);
+        }
+      } catch (error) {
+        console.log(error);
+      }
+    };
+
+    updateCarParks();
+  }, [area, carParkSearch]);
 
   const handleETA = async () => {
     try {
@@ -154,13 +179,15 @@ function Landing() {
                         _selected={{ bgColor: "#8C1B55", color: "white" }}
                         bgColor={"#e3e3e3"}
                       >
-                        <Text fontSize={['15px', '18px', '20px']}>Search</Text>
+                        <Text fontSize={["15px", "18px", "20px"]}>Search</Text>
                       </Tab>
                       <Tab
                         _selected={{ bgColor: "#8C1B55", color: "white" }}
                         bgColor={"#e3e3e3"}
                       >
-                        <Text fontSize={['15px', '18px', '20px']}>View Map</Text>
+                        <Text fontSize={["15px", "18px", "20px"]}>
+                          View Map
+                        </Text>
                       </Tab>
                     </TabList>
                     <TabPanels h={"94%"}>
@@ -212,15 +239,13 @@ function Landing() {
                         <Center>
                           <Button
                             w={"50%"}
-                            maxW={'150px'}
+                            maxW={"150px"}
                             bgColor={"#4e76e6"}
                             color={"white"}
                             onClick={handleETA}
                             _hover={{ bgColor: "#294db3", color: "white" }}
                           >
-                            <Text fontSize={[10, 12, 18]} >
-                              Estimate
-                            </Text>
+                            <Text fontSize={[10, 12, 18]}>Estimate</Text>
                           </Button>
                         </Center>
                         {displaySearchErrorMessage && (
@@ -355,9 +380,7 @@ function Landing() {
                                     </Td>
                                   </Tr>
                                   <Tr>
-                                    <Th textAlign={"left"}>
-                                      Sub Bus ETA
-                                    </Th>
+                                    <Th textAlign={"left"}>Sub Bus ETA</Th>
                                     <Td textAlign={"left"}>
                                       {calculateETA(
                                         obj.NextBus2.EstimatedArrival
@@ -381,9 +404,163 @@ function Landing() {
                 </Box>
               </TabPanel>
 
-              <TabPanel>
-                <p>two!</p>
+              <TabPanel h={"100%"}>
+                <Box h={"10%"} textAlign={"center"}>
+                  <Heading fontSize={[20, 28, 40]} color={"#8C1B55"}>
+                    Carpark Availability
+                  </Heading>
+                  <Text fontSize={[12, 13, 18]} marginTop={"10px"}>
+                    Check for available lots at various carparks!
+                  </Text>
+                </Box>
+                <Box h={"90%"} marginTop={"20px"}>
+                  <Tabs
+                    isFitted
+                    variant="enclosed"
+                    w={"60%"}
+                    h={"100%"}
+                    margin={"auto"}
+                    minW={"350px"}
+                  >
+                    <TabList mb="1em" h={"6%"}>
+                      <Tab
+                        _selected={{ bgColor: "#8C1B55", color: "white" }}
+                        bgColor={"#e3e3e3"}
+                      >
+                        <Text fontSize={["15px", "18px", "20px"]}>Search</Text>
+                      </Tab>
+                      <Tab
+                        _selected={{ bgColor: "#8C1B55", color: "white" }}
+                        bgColor={"#e3e3e3"}
+                      >
+                        <Text fontSize={["15px", "18px", "20px"]}>
+                          View Map
+                        </Text>
+                      </Tab>
+                    </TabList>
+                    <TabPanels h={"94%"}>
+                      <TabPanel h={"90%"} borderRadius={"10px"} w={"100%"}>
+                        <HStack
+                          align={"start"}
+                          spacing={20}
+                          marginTop={"20px"}
+                          marginBottom={"30px"}
+                        >
+                          <Box w={"50%"} margin={"auto"}>
+                            <Text
+                              fontSize={[9, 16, 20]}
+                              fontWeight={"bold"}
+                              marginBottom={"10px"}
+                              style={{ whiteSpace: "nowrap" }}
+                            >
+                              Area
+                            </Text>
+
+                            <Select
+                              value={area}
+                              onChange={setArea}
+                              options={AllAreas}
+                              placeholder={"Select"}
+                            />
+                          </Box>
+                          <Box w={"50%"} margin={"auto"}>
+                            <Flex flexDir={"row"}>
+                              <Text
+                                fontSize={[9, 16, 20]}
+                                fontWeight={"bold"}
+                                marginBottom={"10px"}
+                                style={{ whiteSpace: "nowrap" }}
+                              >
+                                Search
+                              </Text>
+                            </Flex>
+
+                            <Input
+                              value={carParkSearch}
+                              onChange={(e) => {
+                                setCarParkSearch(e.target.value);
+                              }}
+                              placeholder={"Select"}
+                            />
+                          </Box>
+                        </HStack>
+
+                        <Box w={"100%"} h={"100%"} marginTop={"20px"}>
+                          <TableContainer>
+                            <Show above="1300px">
+                              <Table variant="striped" colorScheme="cyan">
+                                <TableCaption>
+                                  Data provided by LTA Singapore
+                                </TableCaption>
+                                {displayCarparkData &&
+                                  displayCarparkData.length > 0 && (
+                                    <Thead>
+                                      <Tr>
+                                        <Th textAlign={"center"}>Car park</Th>
+                                        <Th textAlign={"center"}>
+                                          Available lots
+                                        </Th>
+                                      </Tr>
+                                    </Thead>
+                                  )}
+
+                                <Tbody>
+                                  {displayCarparkData &&
+                                    displayCarparkData.length > 0 &&
+                                    displayCarparkData.map((obj, index) => (
+                                      <Tr key={index}>
+                                        <Td textAlign={"center"}>
+                                          <Text>{obj.Development}</Text>
+                                        </Td>
+                                        <Td textAlign={"center"}>
+                                          <Text>
+                                            {obj.AvailableLots < 0
+                                              ? 0
+                                              : obj.AvailableLots}
+                                          </Text>
+                                        </Td>
+                                      </Tr>
+                                    ))}
+                                </Tbody>
+                              </Table>
+                            </Show>
+                            <Show below="1300px">
+                              {displayCarparkData && displayCarparkData.map((obj, index) => (
+                                <Table key={index}>
+                                  <Tr>
+                                    <Th textAlign={"left"}>Bus Service</Th>
+                                    <Td textAlign={"left"}>x</Td>
+                                  </Tr>
+                                  <Tr>
+                                    <Th textAlign={"left"}>ETA</Th>
+                                    <Td textAlign={"left"}>x</Td>
+                                  </Tr>
+                                  <Tr>
+                                    <Th textAlign={"left"}>Crowd Level</Th>
+                                  </Tr>
+                                  <Tr>
+                                    <Th textAlign={"left"}>Type</Th>
+                                  </Tr>
+                                  <Tr>
+                                    <Th textAlign={"left"}>Sub Bus ETA</Th>
+                                  </Tr>
+                                  <Tr>
+                                    <Td></Td>
+                                  </Tr>
+                                </Table>
+                              ))}
+                            </Show>
+                          </TableContainer>
+                        </Box>
+                      </TabPanel>
+                      <TabPanel h={"90%"}>
+                        <p>two!</p>
+                      </TabPanel>
+                    </TabPanels>
+                  </Tabs>
+                </Box>
               </TabPanel>
+
               <TabPanel>
                 <p>three!</p>
               </TabPanel>
