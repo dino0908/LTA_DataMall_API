@@ -154,13 +154,13 @@ function Landing() {
                         _selected={{ bgColor: "#8C1B55", color: "white" }}
                         bgColor={"#e3e3e3"}
                       >
-                        <Text fontSize={[9, 12, 16]}>Search</Text>
+                        <Text fontSize={['15px', '18px', '20px']}>Search</Text>
                       </Tab>
                       <Tab
                         _selected={{ bgColor: "#8C1B55", color: "white" }}
                         bgColor={"#e3e3e3"}
                       >
-                        <Text fontSize={[9, 12, 16]}>View Map</Text>
+                        <Text fontSize={['15px', '18px', '20px']}>View Map</Text>
                       </Tab>
                     </TabList>
                     <TabPanels h={"94%"}>
