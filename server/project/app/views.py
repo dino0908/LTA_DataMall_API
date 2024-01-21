@@ -1,9 +1,14 @@
 import requests
 import json
+import os
 from django.http import HttpResponse
 from django.views.decorators.csrf import csrf_exempt
 from django.views.decorators.http import require_POST
 from django.http import JsonResponse
+from dotenv import load_dotenv
+
+load_dotenv()
+API_KEY = os.getenv("API_KEY")
 
 @csrf_exempt
 @require_POST
@@ -17,7 +22,7 @@ def busETA(request):
     else:
         params = {'BusStopCode': bus_stop_code}
     
-    headers = {'AccountKey': 'sI9JhoYoRbqzNvshYOHVXQ=='}
+    headers = {'AccountKey': API_KEY}
 
     try:
         response = requests.get(api_url, params=params, headers=headers)
@@ -37,7 +42,7 @@ def carpark(request):
     search = body.get('search')
 
 
-    headers = {'AccountKey': 'sI9JhoYoRbqzNvshYOHVXQ=='}
+    headers = {'AccountKey': API_KEY}
 
     #if area is not '', filter data - area must match
     #if search is not '', filter data - development must contain search
