@@ -1,4 +1,3 @@
-<h1 align="center">What's your ETA</h1>
 <h3 align="center">A web application that leverages data provided by DataMall LTA</h3>
 
 <h2>Features</h2>
